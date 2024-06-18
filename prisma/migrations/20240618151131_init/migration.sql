@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "ListItem" ALTER COLUMN "list_item_date" SET DEFAULT CURRENT_TIMESTAMP;

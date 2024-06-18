@@ -28,15 +28,15 @@ model List {
   list_desc   String
   list_cat    String
   user_id     Int
-  user        User        @relation(fields: [user_id], references: [user_id])
+  user        User        @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
   listItems   ListItem[]
 }
 
 model ListItem {
   list_item_id   Int      @id @default(autoincrement())
-  list_item_date DateTime
-  list_item_cat  String
-  completed      Boolean
+  list_item_date DateTime @default(now())
+  list_item_desc String
+  completed      Boolean  @default(false)
   list_id        Int
-  list           List     @relation(fields: [list_id], references: [list_id])
+  list           List     @relation(fields: [list_id], references: [list_id], onDelete: Cascade)
 }

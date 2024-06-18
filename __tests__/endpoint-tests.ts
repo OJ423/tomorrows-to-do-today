@@ -6,17 +6,22 @@ import jwt from 'jsonwebtoken';
 
 
 beforeAll(async () => {
-  await prisma.user.deleteMany({})
+  await prisma.user.deleteMany({});
+
 })
 
 afterAll(async () => {
-  // Delete all users (or specific data) after tests
   await prisma.user.deleteMany({});
   await prisma.$disconnect();
   server.close();
 });
 
 const JWT_SECRET: string = process.env.JWT_SECRET as string
+
+let userNoOne:string
+let listNoOne:string
+let listNoTwo:string
+let listItemNoOne:string
 
 describe('Post User', () => {
   it('should post a new user', async () => {
@@ -30,7 +35,7 @@ describe('Post User', () => {
       .post('/api/users/register')
       .send(userData)
       .expect(201); 
-
+    userNoOne = response.body.newUser.user_id
     expect(response.body.newUser).toHaveProperty('user_id'); // Check for generated ID
     expect(response.body.newUser.username).toBe(userData.username);
     expect(response.body.newUser.email).toBe(userData.email);
@@ -145,7 +150,123 @@ describe('Login User', () => {
       .send(userData)
       .expect(404); 
     
-    console.log(response.body)
     expect(response.body.message).toBe('User cannot be found');
+  })
+})
+
+describe('Lists - Create and Delete', () => {
+  it('Should add a list', async () => {
+    const token = await jwt.sign({email:"donny@nkotb.com"}, JWT_SECRET, {expiresIn:'1h'});
+
+    const userData = {
+      list_name: 'Shopping List',
+      list_desc: 'Supplies for the big night',
+      list_cat: 'life'
+    }
+
+    const response = await request(app)
+      .post(`/api/lists/${userNoOne}`)
+      .send(userData)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(201); 
+
+      listNoOne = response.body.list.list_id
+
+    expect(response.body.list.list_name).toBe('Shopping List');
+    expect(response.body.list.list_desc).toBe('Supplies for the big night');
+  })
+
+  it('Should add a new list for the next test', async () => {
+    const token = await jwt.sign({email:"donny@nkotb.com"}, JWT_SECRET, {expiresIn:'1h'});
+
+    const userData = {
+      list_name: 'Black Smith Project',
+      list_desc: 'Things to know to get into black smithing',
+      list_cat: 'Hobbies'
+    }
+
+    const response = await request(app)
+      .post(`/api/lists/${userNoOne}`)
+      .send(userData)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(201); 
+
+    listNoTwo = response.body.list.list_id;
+  })
+
+
+  it('Should get all lists for a user', async () => {
+
+    const response = await request(app)
+      .get(`/api/lists/all/${userNoOne}`)
+      .expect(200); 
+    
+    expect(response.body.lists.length).toBe(2);
+  })
+
+  it('should get a list by its ID', async () => {
+    const response = await request(app)
+    .get(`/api/lists/${listNoOne}`)
+    .expect(200)
+
+    expect(response.body.list.list_name).toBe('Shopping List')
+  })
+})
+
+describe('List Items - Create, Get, and Delete', () => {
+  it('Should add an item to a list', async () => {
+    const token = await jwt.sign({email:"donny@nkotb.com"}, JWT_SECRET, {expiresIn:'1h'});
+
+    const userData = {
+      list_item_desc: 'Cheese',
+    }
+
+    const response = await request(app)
+      .post(`/api/list-items/new/${listNoOne}`)
+      .send(userData)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(201); 
+    listItemNoOne = response.body.listItem.list_item_id;
+    expect(response.body.listItem.list_item_desc).toBe('Cheese');
+    expect(response.body.listItem.list_id).toBe(listNoOne);
+  })
+
+  it('Adding item for next test', async () => {
+    const token = await jwt.sign({email:"donny@nkotb.com"}, JWT_SECRET, {expiresIn:'1h'});
+
+    const userData = {
+      list_item_desc: 'Butter',
+    }
+
+    const response = await request(app)
+      .post(`/api/list-items/new/${listNoOne}`)
+      .send(userData)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(201); 
+    expect(response.body.listItem.list_item_desc).toBe('Butter');
+    expect(response.body.listItem.list_id).toBe(listNoOne);
+  })
+
+  it('Should get all lists items for a list', async () => {
+    
+    const response = await request(app)
+      .get(`/api/list-items/${listNoOne}`)
+      .expect(200); 
+    
+    expect(response.body.listItems.length).toBe(2);
+  })
+
+  it('should mark a list item as complete', async () => {
+    const token = await jwt.sign({email:"donny@nkotb.com"}, JWT_SECRET, {expiresIn:'1h'});
+
+    const response = await request(app)
+      .post(`/api/list-items/${listItemNoOne}`)
+      .send({
+        completed: true
+      })
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+    
+    expect(response.body.listItem.completed).toBe(true)
   })
 })
