@@ -4,7 +4,8 @@
   "main": "app.ts",
   "scripts": {
     "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --name init",
-    "test": "dotenv -e .env.test -- jest -i"
+    "test": "dotenv -e .env.test -- jest -i",
+    "start": "ts-node app.ts"
   },
   "keywords": [],
   "author": "",
