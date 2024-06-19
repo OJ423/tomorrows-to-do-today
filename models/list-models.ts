@@ -29,3 +29,12 @@ export async function fetchListById(list_id: number) {
   });
   return list;
 }
+
+export async function removeList(list_id:number) {
+  const deleteList = await prisma.list.delete({
+    where: {
+      list_id: list_id
+    }
+  })
+  return deleteList
+}

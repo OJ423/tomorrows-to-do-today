@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createListItem, fetchListItemsByList, updateListItemCompleteStatus } from "../models/list-items.models";
+import { createListItem, fetchListItemsByList, removeListItem, updateListItemCompleteStatus } from "../models/list-items.models";
 
 export async function addListItemToList (req: Request, res: Response) {
   try {
@@ -9,8 +9,7 @@ export async function addListItemToList (req: Request, res: Response) {
     res.status(201).send({listItem: newListItem})
   }
   catch(error:any) {
-    res.status(400).send({message: "Something went wrong adding your list"})
-  }
+    res.status(error.status).send({message: error.message})  }
 }
 
 export async function getListsItemsByList(req: Request, res: Response) {
@@ -20,8 +19,7 @@ export async function getListsItemsByList(req: Request, res: Response) {
     res.status(200).send({listItems: toDoLists})
   }
   catch(error:any) {
-    res.status(400).send({message: 'Something went wrong.'})
-  }
+    res.status(error.status).send({message: error.message})  }
 }
 
 export async function toggleListItemComplete(req:Request, res:Response) {
@@ -32,6 +30,18 @@ export async function toggleListItemComplete(req:Request, res:Response) {
     res.status(200).send({listItem})
   }
   catch (error:any) {
-    res.status(400).send({message: 'To Do failed to mark as complete'})
+    res.status(error.status).send({message: error.message})
   }
+}
+
+export async function deleteListItem(req:Request, res: Response) {
+  try {
+    const list_item_id = +req.params.list_item_id;
+    const deleteListItem = await removeListItem(list_item_id);
+    res.status(200).send({message: `List item '${deleteListItem.list_item_desc}' successfully deleted.`})
   }
+  catch (error:any) {
+    console.log(error.message)
+    res.status(error.status).send({message: error.message})
+  }
+}

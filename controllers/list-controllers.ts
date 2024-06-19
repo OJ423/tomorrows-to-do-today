@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { createList, fetchListById, fetchListsByUser } from "../models/list-models";
+import { createList, fetchListById, fetchListsByUser, removeList } from "../models/list-models";
+import { fetchListItemsByList } from "../models/list-items.models";
 
 export async function addList(req: Request, res: Response) {
   try {
@@ -32,10 +33,21 @@ export async function getListById(req: Request, res: Response) {
   try {
     const list_id = +req.params.list_id;
     const list = await fetchListById(list_id);
-    console.log(list)
-    res.status(200).send({list})
+    const listItems = await fetchListItemsByList(list_id)
+    res.status(200).send({list, listItems})
   }
   catch(error:any) {
     res.status(400).send({message: 'Something went wrong.'})
+  }
+}
+
+export async function deleteList(req:Request, res: Response) {
+  try {
+    const list_id = +req.params.list_id;
+    const deleteList = await removeList(list_id);
+    res.status(200).send({message: `List '${deleteList.list_name}' successfully deleted.`})
+  }
+  catch (error:any) {
+    res.status(error.status).send({message: error.message})
   }
 }

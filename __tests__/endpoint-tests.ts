@@ -204,13 +204,26 @@ describe('Lists - Create and Delete', () => {
     expect(response.body.lists.length).toBe(2);
   })
 
-  it('should get a list by its ID', async () => {
+  it('should get a list by its ID along with its todo items', async () => {
     const response = await request(app)
     .get(`/api/lists/${listNoOne}`)
     .expect(200)
 
     expect(response.body.list.list_name).toBe('Shopping List')
+    expect(response.body.listItems.length).toBe(0)
   })
+
+  it('should delete a list by ID', async () => {
+    const token = await jwt.sign({email:"donny@nkotb.com"}, JWT_SECRET, {expiresIn:'1h'});
+
+    const response = await request(app)
+      .delete(`/api/lists/delete/${listNoTwo}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+    
+    expect(response.body.message).toBe("List 'Black Smith Project' successfully deleted.")
+  })
+
 })
 
 describe('List Items - Create, Get, and Delete', () => {
@@ -268,5 +281,16 @@ describe('List Items - Create, Get, and Delete', () => {
       .expect(200)
     
     expect(response.body.listItem.completed).toBe(true)
+  })
+
+  it('should delete a list item by ID', async () => {
+    const token = await jwt.sign({email:"donny@nkotb.com"}, JWT_SECRET, {expiresIn:'1h'});
+
+    const response = await request(app)
+      .delete(`/api/list-items/delete/${listItemNoOne}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+    
+    expect(response.body.message).toBe("List item 'Cheese' successfully deleted.")
   })
 })

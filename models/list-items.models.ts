@@ -30,3 +30,12 @@ export async function updateListItemCompleteStatus(list_item_id:number, complete
   })
   return completeToDo
 }
+
+export async function removeListItem(list_item_id:number) {
+  const deleteListItem = await prisma.listItem.delete({
+    where: {
+      list_item_id: list_item_id
+    }
+  })
+  return deleteListItem
+}
