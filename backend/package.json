@@ -5,7 +5,9 @@
   "scripts": {
     "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --name init",
     "test": "dotenv -e .env.test -- jest -i",
-    "start": "ts-node app.ts"
+    "start": "ts-node app.ts",
+    "seed": "ts-node prisma/seed.ts",
+    "getData": "ts-node prisma/testData.ts"
   },
   "keywords": [],
   "author": "",
@@ -25,9 +27,11 @@
   },
   "dependencies": {
     "@prisma/client": "^5.15.0",
+    "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/nodemailer": "^6.4.15",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "http-status-codes": "^2.3.0",
     "install": "^0.13.0",

@@ -122,6 +122,13 @@ describe('Verify User', () => {
     
       expect(response.body.msg).toBe('Authorization header missing')
   })
+  it('should get a user by their ID', async () => {
+    const response = await request(app)
+      .get(`/api/users/${userNoOne}`)
+      .expect(200)
+
+      expect(response.body.user.username).toBe('DonnyD')
+  })
 })
 
 describe('Login User', () => {

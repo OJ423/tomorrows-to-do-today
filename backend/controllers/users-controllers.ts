@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { activateUser, createUser, loginUserCheck } from "../models/user-models";
+import { activateUser, createUser, fetchUserByID, loginUserCheck } from "../models/user-models";
 import jwt from "jsonwebtoken"
 import { sendVerificationEmail } from "./utils";
 
@@ -8,6 +8,17 @@ const JWT_SECRET: string = process.env.JWT_SECRET as string
 interface DecodedToken {
   email: string;
   [key: string]: any;
+}
+
+export async function getUserById (req: Request, res: Response) {
+  try {
+    const user_id = +req.params.user_id
+    const user = await fetchUserByID(user_id)
+    res.status(200).send({user})
+  }
+  catch(error:any) {
+    res.status(error.status).send(error.message)
+  }
 }
 
 

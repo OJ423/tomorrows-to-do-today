@@ -13,6 +13,15 @@ export async function createUser (username: string, email:string, password: stri
   return newUser
 }
 
+export async function fetchUserByID(user_id:number) {
+  const user = prisma.user.findUnique({
+    where: {
+      user_id: user_id
+    }
+  })
+  return user
+}
+
 export async function activateUser(email:string) {
   const updateUser = await prisma.user.update({
     where: {

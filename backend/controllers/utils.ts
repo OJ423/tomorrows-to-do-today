@@ -13,12 +13,16 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendVerificationEmail = (email:string, token:string) => {
-  const url = `http://localhost:3000/verify-email?token=${token}`;
+  const url = `http://localhost:8080/verify-email?token=${token}`;
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
     subject: `Tomorrow's to-do Today Verify Email`,
-    html: `Please click the link to verify your email address: <a href="${url}">${url}</a>`
+    html: `Thanks for registering.
+    
+Please click the link to <a href="${url}">verify your email address</a>
+    
+<a href="${url}">${url}</a>`
   };
 
   transporter.sendMail(mailOptions)
