@@ -1,5 +1,6 @@
 "use client"
 
+import AddToDoForm from "@/components/AddToDoForm";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ToDoCard from "@/components/ToDoCard";
@@ -12,10 +13,16 @@ import { useEffect, useState } from "react";
 
 export default function ToDoList() {
   const [listInfo, setListInfo] = useState<List | null>(null);
-  const [toDoItems, setToDoItems ] = useState<ToDoItems[] | null>(null)
-  const { user, token } = useAuth()
+  const [listChange, setListChange] = useState<boolean>(false);
+  const [toDoItems, setToDoItems ] = useState<ToDoItems[] | null>(null);
+  const [addNewForm, setAddNewForm ] = useState<boolean>(false);
+  const { user, token } = useAuth();
   const searchParams = useSearchParams();
-  const selectedList:string | null = searchParams.get('list')
+  const selectedList:string | null = searchParams.get('list');
+
+  function handleFormAppear() {
+    setAddNewForm(!addNewForm)
+  }
 
   useEffect(() => {
     if (selectedList) {
@@ -32,8 +39,8 @@ export default function ToDoList() {
       }
       fetchData()
     }
-  },[])
-  console.log(toDoItems)
+  },[listChange])
+
   return(
     <section className="flex min-h-screen flex-col items-center justify-between w-screen">
       <Header />
@@ -49,14 +56,17 @@ export default function ToDoList() {
               <span className="bg-[#1DBF6C] block p-2 rounded font-bold">{listInfo.list_cat}</span>
               <p>{listInfo.list_desc}</p>
             </div>
-            <button className="cursor-pointer inline-flex items-center rounded-full px-4 py-2 font-semibold text-[#1DBF6C] hover:text-white border-2 border-[#1DBF6C] hover:bg-[#1DBF6C] transition ease-in-out delay-150 hover:-translate-y-1 hover:bg-[#1DBF6C] duration-300">
+            <button onClick={handleFormAppear} className="cursor-pointer inline-flex items-center rounded-full px-4 py-2 font-semibold text-[#1DBF6C] hover:text-white border-2 border-[#1DBF6C] hover:bg-[#1DBF6C] transition ease-in-out delay-150 hover:-translate-y-1 hover:bg-[#1DBF6C] duration-300">
               Add new
             </button>
           </div>
+          <section className={`${addNewForm ? "block" : "hidden"}`}>
+            <AddToDoForm list_id={selectedList} setListChange={setListChange} listChange={listChange} setAddNewForm={setAddNewForm} addNewForm={addNewForm}/>
+          </section>
           { toDoItems ? 
           <section className="flex flex-col gap-4">
           {toDoItems.map((item: any) => (
-           <ToDoCard key={item.list_item_id} toDo={item} />
+           <ToDoCard key={item.list_item_id} toDo={item} setListChange={setListChange} listChange={listChange}  />
           ))}
           </section>
           :

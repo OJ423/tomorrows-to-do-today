@@ -8,6 +8,7 @@ import Link from "next/link";
 export function ListsList() {
   const {user, token} = useAuth()
   const [userLists, setUserLists] = useState<List[] | []>([])
+  const [listChange, setListChange] = useState<boolean>(false)
 
   useEffect(() => {
     if (user) {
@@ -23,16 +24,16 @@ export function ListsList() {
       }
       fetchData()
     }
-  },[])
+  },[listChange])
 
   return(
-    <section className="w-full flex flex-col gap-8">
+    <section className="flex flex-col gap-8">
         {userLists.length ? 
         <>
         <p className="text-lg mb-4">Here are your to-do lists...</p>
         {userLists.map((list: any) => (
           <section key={list.list_id} className="p-8 border-2 rounded-lg">
-            <ListCard list={list}/>
+            <ListCard list={list} listChange={listChange} setListChange={setListChange} />
 
           </section>
         ))}

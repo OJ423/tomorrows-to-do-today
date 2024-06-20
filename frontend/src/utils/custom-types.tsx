@@ -15,6 +15,10 @@ export type NewListInput = {
   list_cat: string
 }
 
+export type NewToDoInput = {
+  list_item_desc: string
+}
+
 export type List = {
     list_id: number,
     list_name: string,
@@ -25,8 +29,12 @@ export type List = {
 
 export type ToDoItems = {
     list_item_id: number,
-    list_item_date: Date,
+    list_item_date: string,
     list_item_desc: string,
     completed: boolean,
     list_id: number
+}
+
+export type ToDoCompleted = {
+  completed: boolean
 }

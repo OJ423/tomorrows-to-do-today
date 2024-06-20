@@ -14,6 +14,9 @@ export async function fetchListItemsByList(list_id: number) {
   const getListItems = await prisma.listItem.findMany({
     where: {
       list_id: list_id
+    },
+    orderBy: {
+      list_item_date: 'desc',
     }
   });
   return getListItems;

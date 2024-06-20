@@ -5,10 +5,12 @@ import { useAuth } from "./context/AuthContext"
 import { List } from "@/utils/custom-types"
 
 interface ListProps {
-  list: List
+  list: List,
+  listChange: boolean,
+  setListChange: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ListCard: React.FC<ListProps> = ({list}) => {
+const ListCard: React.FC<ListProps> = ({list, listChange, setListChange}) => {
   const [deleteCheck, setDeleteCheck] = useState<boolean>(false)
   const [optimisticDelete, setOptimisticDelete] = useState<boolean>(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
@@ -23,13 +25,13 @@ const ListCard: React.FC<ListProps> = ({list}) => {
       const list_id = +list.list_id
       const deleteList = await deleteListById(list_id, token) 
       setOptimisticDelete(true)
+      setListChange(!listChange)
     } catch(error:any) {
       if(error.response.data.msg === "Invalid or expired token") {
         setDeleteError("Your authentication token has expired. Please log out and log back in to proceed with this delete action.")
       }
       console.log(error.response.data.msg)
-    }
-      
+    } 
   }
 
   return (
@@ -63,9 +65,9 @@ const ListCard: React.FC<ListProps> = ({list}) => {
           </button>
           }
         </div>
-        {deleteError ? <p className='font-bold mt-8 text-rose-600 text-center'>{deleteError}</p>:null}
       </div>
     </div>
+        {deleteError ? <p className='font-bold mt-8 text-rose-600 text-center'>{deleteError}</p>:null}
     </>
   )
 }

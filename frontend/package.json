@@ -6,10 +6,14 @@
     "dev": "next dev -p 8080",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
+    "@react-icons/all-files": "^4.1.0",
+    "@types/react-icons": "^3.0.0",
     "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
@@ -17,7 +21,6 @@
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
