@@ -7,7 +7,7 @@ import { authMiddleware } from '../middleware/authMiddleware'
 const usersRouter = Router()
 
 usersRouter.post('/register', validateData(userRegistrationSchema), registerUser);
-usersRouter.get('/verify-email', authMiddleware, verifyAccount);
+usersRouter.get('/verify-email', verifyAccount);
 usersRouter.get('/:user_id', authMiddleware, getUserById)
 usersRouter.post('/login', validateData(loginSchema), loginUser)
 
