@@ -74,7 +74,7 @@ FRONTEND_URL=http://localhost:8080
 
 Create your databases by running:
 
-`npm run setupsetup-dbs`
+`npm run setup-dbs`
 
 Migrate your schemas for both environments:
 

@@ -58,7 +58,7 @@ export async function verifyAccount(req: Request, res: Response ) {
     res.status(200).send({message: "User activated", user, token:verificationToken })
   }
   catch(error:any) {
-    console.log(error.message)
+    res.status(error.status || 500).send({ msg: error.msg || 'Internal server error' });
   }
 }
 
@@ -77,8 +77,6 @@ export async function loginUser(req: Request, res: Response ) {
   catch(error:any) {
     console.log(error.code)
 
-      res.status(500).send({
-        message: "Internal Server Error",
-      })
+    res.status(error.status || 500).send({ msg: error.msg || 'Internal server error' })
   }
 }

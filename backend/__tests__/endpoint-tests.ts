@@ -113,18 +113,21 @@ describe('Verify User', () => {
     .send(userData)
     .expect(201);
   })
-  it('Should reject a users with missing token', async () => {
-    const token = await jwt.sign({email:"benny@nkotb.com"}, JWT_SECRET, {expiresIn:'1h'});
+  it('Should reject a users with wrong token', async () => {
+    const token = await jwt.sign({email:"benny@nkotb.com"}, 'thewrongtoken', {expiresIn:'1h'});
     
     const response = await request(app)
       .get(`/api/users/verify-email?token=${token}`)
-      .expect(401); 
+      .expect(400); 
     
-      expect(response.body.msg).toBe('Authorization header missing')
+      expect(response.body.msg).toBe('Error verifying user: JsonWebTokenError: invalid signature')
   })
   it('should get a user by their ID', async () => {
+    const token = await jwt.sign({email:"donny@nkotb.com"}, JWT_SECRET, {expiresIn:'1h'});
+
     const response = await request(app)
       .get(`/api/users/${userNoOne}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(200)
 
       expect(response.body.user.username).toBe('DonnyD')
