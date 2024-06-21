@@ -1,8 +1,9 @@
 {
-  "name": "Tomorrows To Do Today Backend",
+  "name": "TomorrowsToDoTodayBackend",
   "version": "1.0.0",
   "main": "app.ts",
   "scripts": {
+    "setup-dbs": "psql -f ./prisma/setupDb.sql",
     "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --name init",
     "test": "dotenv -e .env.test -- jest -i",
     "start": "ts-node app.ts",

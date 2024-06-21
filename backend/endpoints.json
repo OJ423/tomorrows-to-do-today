@@ -1,0 +1,188 @@
+{
+   "POST /api/users/register": {
+    "description": "Takes username, email and password and registers user as unverified user. Sends email with link to validate",
+    "queries": [],
+    "inputBodyExample": {
+      "username": "username",
+      "email": "email@email.com",
+      "password": "password8characters"
+    },
+    "exampleResponse": [
+      {
+        "message": "Successfully registered. Please check email to validate your account",
+        "newUser": {
+          "user_id": 1,
+          "username": "string",
+          "email": "string",          "password": "hashed password as string",
+          "validated": false
+        },
+        "token": "JWT token"
+      }
+    ]
+  },
+  "GET /api/users/verify-email": {
+    "description": "Takes a tokenized URL and uses the token param to authenticate and validate the user. Returns success message, user and token for client verification",
+    "queries": [],
+    "params": "JWT token",
+    "exampleResponse": [
+      {
+        "message": "Use Activated",
+        "user": {
+          "user_id": 2,
+          "username": "string",
+          "email": "string",          "password": "hashed password as string",
+          "validated": true
+        },
+        "token": "JWT token"
+      }
+    ]
+  },
+  "GET /api/users/:user_id": {
+    "description": "Return user informaiton based on their ID obtained from the params",
+    "params": ["user_id"],
+    "exampleResponse": {
+      "user": {
+          "user_id": 42,
+          "username": "string",
+          "email": "string",          "password": "hashed password as string",
+          "validated": true
+      }
+    }
+  },
+  "POST /api/users/login": {
+    "description": "Login user with username and password and issue token",
+    "inputBodyExample": {
+      "email": "email@email.com",
+      "password": "password8characters"
+    },
+    "exampleResponse":
+      {
+        "user": {
+          "user_id": 7,
+          "username": "string",
+          "email": "string",          "password": "hashed password as string",
+          "validated": false
+        },
+        "token": "JWT token"
+      }
+  },
+
+
+
+  "POST /api/lists/:user_id": {
+    "description": "Creates a new list for a user based on their ID",
+    "queries": [],
+    "header": "token",
+    "inputBodyExample": {
+      "list_name": "string",
+      "list_desc": "string",
+      "list_cat": "string"
+    },
+    "exampleResponse":
+      {
+        "list": {
+          "list_id": 6,
+          "list_name": "string",
+          "list_desc:": "string",
+          "list_cat": "string",
+          "user_id": "string"
+        }
+      }
+  },
+  "GET /api/lists/all/:user_id": {
+    "description": "Returns all user lists based on their user_id params",
+    "params": ["user_id"],
+    "exampleResponse": [
+      {"list": {
+        "list_id": 3,
+        "list_name": "string",
+        "list_desc:": "string",
+        "list_cat": "string",
+        "user_id": "string"
+      }}
+    ]
+  },
+  "GET /api/lists/:list_id": {
+    "description": "Returns a single list with all to-do items based on list_id",
+    "params": ["list_id"],
+    "exampleResponse": {
+      "list": {
+        "list_id": "number",
+        "list_name": "string",
+        "list_desc:": "string",
+        "list_cat": "string",
+        "user_id": "string"
+      },
+      "listItems": [
+        {
+          "list_item_id": 1,
+          "list_item_date": "DateTime", 
+          "list_item_desc": "string",
+          "completed": false,
+          "list_id": 2
+        }
+      ]
+    }
+  },
+  "DELETE /api/lists/delete/:list_id": {
+    "description": "Deletes a list ",
+    "params": ["list_id"],
+    "header": "token",
+    "exampleResponse": {
+      "message": "List list name successfully deleted." 
+  }
+},
+
+
+
+  "POST /api/list-items/new/:list_id": {
+    "description": "Adds new list item to a list",
+    "params": ["list_id"],
+    "header": "token",
+    "inputBodyExample": {
+      "list_item_desc": "string",
+      "list_id": 2
+    },
+    "exampleResponse":{
+      "list_item_id": 1,
+      "list_item_date": "DateTime", 
+      "list_item_desc": "string",
+      "completed": false,
+      "list_id": 2
+    }
+  },
+  "POST /api/list-items/:list_item_id": {
+    "description": "Toggles to-do item completed status using params identifier",
+    "params": ["list_item_id"],
+    "header": "token",
+    "inputBodyExample": {
+      "completed": true
+    },
+    "exampleResponse":{
+      "list_item_id": 1,
+      "list_item_date": "DateTime", 
+      "list_item_desc": "string",
+      "completed": true,
+      "list_id": 2
+    }
+  },
+  "DELETE /api/list-items/delete/:list_item_id": {
+    "description": "Deletes a todo list item",
+    "params": ["list_item_id"],
+    "header": "token",
+    "exampleResponse": {
+      "message": "List item list item name successfully deleted." 
+  },
+  "GET /api/list-items/:list_id": {
+    "description": "Gets list items for a list",
+    "params": ["list_id"]
+    },
+    "exampleResponse":{
+      "list_item_id": 1,
+      "list_item_date": "DateTime", 
+      "list_item_desc": "string",
+      "completed": false,
+      "list_id": 2
+    }
+  }
+}
